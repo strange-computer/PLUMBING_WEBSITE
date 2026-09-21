@@ -1,0 +1,98 @@
+---
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import CtaBand from "../../components/CtaBand.astro";
+import JsonLd from "../../components/JsonLd.astro";
+import PhotoCaption from "../../components/PhotoCaption.astro";
+import { businessId, cities, emergencyTips, navServices, services, site } from "../../data/site";
+import Base from "../../layouts/Base.astro";
+
+export function getStaticPaths() {
+  return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
+}
+
+const { service } = Astro.props;
+const canonical = `${site.url}/plumbing-services/${service.slug}/`;
+const otherServices = navServices.filter((item) => !item.href.includes(`/${service.slug}/`));
+---
+
+<Base title={service.title} description={service.description} canonical={canonical} faqs={service.faqs}>
+  <JsonLd
+    data={{
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: service.h1,
+      provider: { "@id": businessId() },
+      areaServed: { "@type": "City", name: "Lake Forest" },
+      url: canonical,
+    }}
+  />
+  <main id="main" class="page">
+    <div class="wrap">
+      <Breadcrumbs
+        trail={[
+          { label: "Home", href: "/" },
+          { label: "Plumbing services", href: "/plumbing-services/" },
+          { label: service.h1 },
+        ]}
+      />
+    </div>
+    <div class="wrap grid-2">
+      <article class="prose">
+        <h1>{service.h1}</h1>
+        <p class="lede">{service.lede}</p>
+        <figure class="photo">
+          <img src={service.photo} alt={service.photoAlt} width="960" height="540" decoding="async" />
+          <PhotoCaption src={service.photo} />
+        </figure>
+        {service.body.map((section) => (
+          <section>
+            <h2>{section.heading}</h2>
+            {section.paragraphs.map((p) => <p>{p}</p>)}
+          </section>
+        ))}
+
+        {service.slug === "emergency" && (
+          <section>
+            <h2>Before we get there</h2>
+            <ul class="tips">
+              {emergencyTips.map((tip) => <li>{tip}</li>)}
+            </ul>
+          </section>
+        )}
+
+        <h2>Questions</h2>
+        <div class="faq">
+          {service.faqs.map((faq) => (
+            <details>
+              <summary>{faq.q}</summary>
+              <p>{faq.a}</p>
+            </details>
+          ))}
+        </div>
+
+        <h2>Where we run this work</h2>
+        <p>Lake Forest is home base. We also handle {service.short} in these south county cities:</p>
+        <ul class="pill-links">
+          {cities.map((city) => (
+            <li><a href={`/service-area/${city.slug}/`}>{city.name}</a></li>
+          ))}
+        </ul>
+      </article>
+
+      <aside class="note note-sticky">
+        <p><strong>Get this scheduled</strong></p>
+        <p>Call for same-day availability, or send details and we will come back with a quote.</p>
+        <p><a class="call" href={`tel:${site.phoneTel}`}>Call {site.phoneDisplay}</a></p>
+        <p><a href="/contact-us/">Request a quote online</a></p>
+        <hr />
+        <p><strong>Other plumbing work</strong></p>
+        <ul class="side-links">
+          {otherServices.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </aside>
+    </div>
+  </main>
+  <CtaBand heading={`Schedule ${service.short} in Lake Forest`} />
+</Base>

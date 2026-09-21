@@ -1,0 +1,186 @@
+---
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import JsonLd from "../components/JsonLd.astro";
+import { businessId, site } from "../data/site";
+import "../styles/global.css";
+
+type Faq = { q: string; a: string };
+
+type Props = {
+  title: string;
+  description: string;
+  canonical?: string;
+  faqs?: Faq[];
+  pageType?: string;
+};
+
+const { title, description, faqs = [], pageType = "WebPage" } = Astro.props;
+const canonical = Astro.props.canonical ?? new URL(Astro.url.pathname, site.url).toString();
+
+const graph: Record<string, unknown>[] = [
+  {
+    "@type": ["Plumber", "LocalBusiness", "Organization"],
+    "@id": businessId(),
+    name: site.name,
+    url: site.url,
+    telephone: site.phoneTel,
+    email: site.email,
+    priceRange: site.priceRange,
+    foundingDate: site.foundingDate,
+    sameAs: site.sameAs,
+    image: [
+      new URL(site.photos.hero, site.url).toString(),
+      new URL(site.photos.emergency, site.url).toString(),
+    ],
+    logo: {
+      "@type": "ImageObject",
+      url: new URL(site.logo, site.url).toString(),
+    },
+    hasMap: `https://www.google.com/maps/search/?api=1&query=${site.address.lat},${site.address.lng}`,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: site.address.street,
+      addressLocality: site.address.city,
+      addressRegion: site.address.region,
+      postalCode: site.address.postal,
+      addressCountry: site.address.country,
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: site.address.lat,
+      longitude: site.address.lng,
+    },
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      opens: site.hoursSpec.opens,
+      closes: site.hoursSpec.closes,
+    },
+    areaServed: [
+      { "@type": "City", name: "Lake Forest" },
+      { "@type": "City", name: "Mission Viejo" },
+      { "@type": "City", name: "Irvine" },
+      { "@type": "City", name: "Aliso Viejo" },
+      { "@type": "City", name: "Laguna Hills" },
+      { "@type": "City", name: "Laguna Niguel" },
+      { "@type": "City", name: "Rancho Santa Margarita" },
+      { "@type": "AdministrativeArea", name: "Orange County, California" },
+    ],
+    description:
+      "Locally owned plumbing contractor in Lake Forest, California. Drain cleaning, leak detection, water heaters, sewer service, and emergency plumbing for south Orange County.",
+  },
+  {
+    "@type": "WebSite",
+    "@id": `${site.url}/#website`,
+    url: site.url,
+    name: site.name,
+    publisher: { "@id": businessId() },
+    inLanguage: "en-US",
+  },
+  {
+    "@type": pageType,
+    "@id": `${canonical}#page`,
+    url: canonical,
+    name: title,
+    description,
+    isPartOf: { "@id": `${site.url}/#website` },
+    about: { "@id": businessId() },
+    inLanguage: "en-US",
+  },
+];
+
+if (site.licenseNumber) {
+  const biz = graph[0] as Record<string, unknown>;
+  biz.identifier = site.licenseNumber;
+  biz.hasCredential = {
+    "@type": "EducationalOccupationalCredential",
+    credentialCategory: "C-36 Plumbing Contractor License",
+    identifier: site.licenseNumber,
+    recognizedBy: {
+      "@type": "Organization",
+      name: "California Contractors State License Board",
+      url: site.licenseUrl,
+    },
+  };
+}
+
+if (faqs.length) {
+  graph.push({
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.q,
+      acceptedAnswer: { "@type": "Answer", text: faq.a },
+    })),
+  });
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(site.photos.hero, site.url).toString()} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#0b1826" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <JsonLd data={{ "@context": "https://schema.org", "@graph": graph }} />
+  </head>
+  <body>
+    <Header />
+    <slot />
+    <Footer />
+    <script>
+      const motionOk = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
+      document.querySelectorAll<HTMLVideoElement>("video.hero-bg").forEach((video) => {
+        const kick = () => video.play().catch(() => {});
+        kick();
+        if (video.readyState < 3) {
+          video.addEventListener("canplay", kick, { once: true });
+        }
+      });
+      if (motionOk && "IntersectionObserver" in window) {
+        const targets = document.querySelectorAll(
+          ".trust-item, .triage-item, .card, .steps li, .city-chip, .link-tile, .fleet-shot"
+        );
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("in");
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: "0px 0px -8% 0px" }
+        );
+        targets.forEach((el, i) => {
+          el.classList.add("reveal");
+          (el as HTMLElement).style.transitionDelay = `${(i % 3) * 80}ms`;
+          io.observe(el);
+        });
+      }
+    </script>
+  </body>
+</html>

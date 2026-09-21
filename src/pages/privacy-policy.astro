@@ -1,0 +1,21 @@
+---
+import { site } from "../data/site";
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="Privacy Policy | Lezco Plumbing"
+  description="Privacy policy for lezcoplumbing.com. How we handle phone, email, and quote inquiries."
+>
+  <main id="main" class="page">
+    <div class="wrap prose">
+      <h1>Privacy policy</h1>
+      <p>
+        If you call, email, or send a quote request, we use that information to schedule work and follow up. We do not sell your contact details. Phone recordings or job notes, if kept, stay with the shop for the job.
+      </p>
+      <p>
+        The website may log standard server data such as IP address and pages requested. Quote forms go to {site.email} through FormSubmit. Questions: {site.email}.
+      </p>
+    </div>
+  </main>
+</Base>

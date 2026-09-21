@@ -1,0 +1,52 @@
+---
+import { quoteCities, quoteServices, site } from "../data/site";
+
+const thanks = new URL("/contact-us/thanks/", Astro.url).href;
+---
+
+<form class="quote-form" action={`https://formsubmit.co/${site.email}`} method="POST">
+  <input type="hidden" name="_subject" value="Quote request from lezcoplumbing.com" />
+  <input type="hidden" name="_template" value="table" />
+  <input type="hidden" name="_captcha" value="false" />
+  <input type="hidden" name="_next" value={thanks} />
+  <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" />
+
+  <div class="form-row">
+    <label>
+      Name
+      <input type="text" name="name" required maxlength="120" autocomplete="name" />
+    </label>
+    <label>
+      Phone
+      <input type="tel" name="phone" required maxlength="40" autocomplete="tel" />
+    </label>
+  </div>
+  <label>
+    Email
+    <input type="email" name="email" required maxlength="120" autocomplete="email" />
+  </label>
+  <div class="form-row">
+    <label>
+      City
+      <select name="city" required>
+        <option value="">Select</option>
+        {quoteCities.map((city) => <option value={city}>{city}</option>)}
+      </select>
+    </label>
+    <label>
+      Service needed
+      <select name="service" required>
+        <option value="">Select</option>
+        {quoteServices.map((item) => <option value={item}>{item}</option>)}
+      </select>
+    </label>
+  </div>
+  <label>
+    What is going on
+    <textarea name="message" rows="5" required maxlength="2000" placeholder="Where in the house, how long it has been happening, and anything you can see or hear."></textarea>
+  </label>
+  <p class="form-note">
+    Submits to {site.email}. For a burst pipe or sewage in the house, call {site.phoneDisplay} instead of waiting on email.
+  </p>
+  <button class="call" type="submit">Send quote request</button>
+</form>

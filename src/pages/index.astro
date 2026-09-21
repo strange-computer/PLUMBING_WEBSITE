@@ -1,0 +1,260 @@
+---
+import CtaBand from "../components/CtaBand.astro";
+import { cities, licenseLine, processSteps, site, symptoms, trustPoints } from "../data/site";
+import Base from "../layouts/Base.astro";
+
+const faqs = [
+  {
+    q: "How do I get a plumber to my Lake Forest home today?",
+    a: "Call (949) 994-9828 and describe what is going on. Same-day service is available when the schedule has an opening. The earlier you call, the more windows we have.",
+  },
+  {
+    q: "How does pricing work?",
+    a: "We quote the job before any work starts. That quote is the price for the work described. If something unexpected comes up on site, we stop and talk to you before adding scope.",
+  },
+  {
+    q: "Which cities do you serve besides Lake Forest?",
+    a: "Mission Viejo, Irvine, Aliso Viejo, Laguna Hills, Laguna Niguel, Rancho Santa Margarita, and Foothill Ranch. If you are in south Orange County and not sure, call and we will confirm before you wait around.",
+  },
+  {
+    q: "Are you licensed?",
+    a: "Yes. Lezco Plumbing holds a California C-36 plumbing contractor license, CSLB #1120970. You can check the status yourself on the CSLB website before you hire us or anyone else.",
+  },
+];
+
+const tickerLine =
+  "Same-day openings — Drain cleaning — Water heaters — Leak detection — Sewer & main line — After-hours emergency — CSLB #1120970 — Lake Forest, CA — ";
+
+const serviceCards = [
+  {
+    href: "/plumbing-services/drain-cleaning/",
+    photo: site.photos.drain,
+    title: "Drain cleaning",
+    text: "Kitchen, bath, and main lines. Hydro jetting when a snake is not enough.",
+  },
+  {
+    href: "/plumbing-services/leak-detection/",
+    photo: site.photos.leak,
+    title: "Leak detection",
+    text: "Hidden leaks and slab leaks located before we open more house than needed.",
+  },
+  {
+    href: "/plumbing-services/water-heater/",
+    photo: site.photos.waterHeater,
+    title: "Water heaters",
+    text: "Tank and tankless repair or replacement, including same-day no-hot-water calls.",
+  },
+  {
+    href: "/plumbing-services/sewer-and-main-line/",
+    photo: site.photos.sewer,
+    title: "Sewer and main line",
+    text: "Camera inspection, clearing, repair, and replacement from the house out.",
+  },
+  {
+    href: "/plumbing-services/emergency/",
+    photo: site.photos.emergency,
+    title: "Emergency plumbing",
+    text: "Burst pipes, backups, and after-hours response in Lake Forest.",
+  },
+];
+---
+
+<Base
+  title="Plumber in Lake Forest, CA | Lezco Plumbing"
+  description="Lake Forest plumber for drain cleaning, leak detection, water heaters, sewer service, and emergencies. Licensed, locally owned, upfront quotes. Call (949) 994-9828."
+  faqs={faqs}
+>
+  <section class="hero hero-video">
+    <video
+      class="hero-bg"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+      poster="/media/lezco-hero-poster.jpg"
+      aria-hidden="true"
+    >
+      <source src="/media/OCEANVIEW_PLUMBING_VAN_ARIEL_PULLBACK.mp4" type="video/mp4" />
+    </video>
+    <div class="wrap">
+      <div class="hero-copy">
+        <p class="kicker">Lake Forest, California</p>
+        <h1>Lake Forest <em>plumber</em></h1>
+        <p class="lede">
+          Locally owned plumbing for homes and businesses in Lake Forest and south Orange County.
+          Licensed plumbers, same-day openings, and a price you approve before work starts.
+        </p>
+        <div class="hero-actions">
+          <a class="call" href={`tel:${site.phoneTel}`}>Call {site.phoneDisplay}</a>
+          <a class="call call-light" href="/contact-us/">Request a quote</a>
+        </div>
+        <div class="meta-row">
+          <span>{site.address.street}, {site.address.city}, {site.address.region}</span>
+          <span><a href={site.licenseUrl}>{licenseLine()}</a> · C-36</span>
+          <span>{site.hours}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>{tickerLine}</span>
+      <span>{tickerLine}</span>
+    </div>
+  </div>
+
+  <section class="trust-strip">
+    <div class="wrap trust-grid">
+      {trustPoints.map((point) => (
+        <div class="trust-item">
+          <strong>{point.label}</strong>
+          <span>{point.detail}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <main id="main">
+    <section class="page triage-section">
+      <div class="wrap">
+        <h2>What is happening right now?</h2>
+        <p class="lede">
+          Pick the closest one. It takes you to the page for that job — or tells you to stop reading and call.
+        </p>
+        <div class="triage" role="list">
+          {symptoms.map((item) => (
+            <a class={`triage-item${item.urgent ? " triage-urgent" : ""}`} href={item.href} role="listitem">
+              <span class="triage-problem">{item.problem}</span>
+              <span class="triage-action">{item.action}</span>
+              {item.urgent && <span class="triage-flag">Call, do not wait</span>}
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap grid-2">
+        <div class="prose">
+          <h2>Plumbing work for this city, not a call center</h2>
+          <p>
+            Lezco Plumbing is based at {site.address.street} in Lake Forest. When a drain backs up, a water
+            heater quits, or a leak shows up under a slab, you want someone who already works this housing
+            stock — 1970s through newer tracts, a lot of it on concrete slabs, with hard water and California
+            conservation rules in the mix.
+          </p>
+          <p>
+            We handle residential and commercial calls. You get a licensed plumber, a straight answer on cost,
+            and the job done the way we would want our own house handled. One number. One crew.
+          </p>
+        </div>
+        <aside class="note">
+          <p><strong>Need someone today?</strong></p>
+          <p>Call {site.phoneDisplay}. Burst pipes, sewer backups, major leaks, and no hot water are treated as emergencies, including after hours.</p>
+          <p><a class="call" href={`tel:${site.phoneTel}`}>Call now</a></p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="wrap">
+        <h2>Services with their own pages</h2>
+        <p class="lede">Each job type has a dedicated page so you can read the specific work, not a homepage dump.</p>
+        <div class="cards" style="margin-top:22px;">
+          {serviceCards.map((card) => (
+            <a class="card" href={card.href}>
+              <img src={card.photo} alt="" width="640" height="360" loading="lazy" decoding="async" />
+              <div class="card-body">
+                <h3>{card.title}</h3>
+                <p>{card.text}</p>
+              </div>
+            </a>
+          ))}
+          <a class="card card-all" href="/plumbing-services/">
+            <div class="card-body">
+              <h3>Everything else we do</h3>
+              <p>
+                Toilets, faucets, and fixtures. Garbage disposals. Shutoff and pressure-reducing valves.
+                Gas line work and earthquake shutoffs. Repiping in copper or PEX. Commercial and multi-unit work.
+              </p>
+              <span class="card-more">See the full service list</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <h2>How a call actually goes</h2>
+        <p class="lede">No mystery invoice at the end. Three steps, in this order, every time.</p>
+        <ol class="steps">
+          {processSteps.map((item, index) => (
+            <li>
+              <span class="step-num">{String(index + 1).padStart(2, "0")}</span>
+              <strong>{item.step}</strong>
+              <p>{item.detail}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="fleet">
+      <div class="wrap fleet-grid">
+        <div>
+          <p class="kicker">Same-day response</p>
+          <h2>The van shows up. Not a dispatch ticket.</h2>
+          <p class="lede">
+            One Lake Forest crew, already working south Orange County. When you call, you are sending a truck —
+            not sitting in a national call-center queue.
+          </p>
+          <a class="call" href={`tel:${site.phoneTel}`}>Call {site.phoneDisplay}</a>
+        </div>
+        <figure class="fleet-shot">
+          <img
+            src={site.photos.van}
+            alt="Blue service van with a wave wrap, ready for a south Orange County plumbing call"
+            width="1257"
+            height="685"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="wrap">
+        <h2>South Orange County service area</h2>
+        <p class="lede">Lake Forest is home base. These cities have their own pages with local notes on housing and access.</p>
+        <div class="city-grid" style="margin-top:20px;">
+          {cities.map((city) => (
+            <a class="city-chip" href={`/service-area/${city.slug}/`}>
+              <strong>{city.name}</strong>
+              <span>Plumber in {city.name}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="page" style="padding-top:0;">
+      <div class="wrap">
+        <h2>Questions before you call</h2>
+        <div class="prose faq" style="margin-top:22px;">
+          {faqs.map((faq) => (
+            <details>
+              <summary>{faq.q}</summary>
+              <p>{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <CtaBand heading="Book a plumber in Lake Forest" />
+</Base>

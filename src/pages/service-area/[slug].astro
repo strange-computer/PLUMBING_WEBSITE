@@ -1,0 +1,90 @@
+---
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import CtaBand from "../../components/CtaBand.astro";
+import JsonLd from "../../components/JsonLd.astro";
+import { businessId, cities, navServices, site } from "../../data/site";
+import Base from "../../layouts/Base.astro";
+
+export function getStaticPaths() {
+  return cities.map((city) => ({ params: { slug: city.slug }, props: { city } }));
+}
+
+const { city } = Astro.props;
+const canonical = `${site.url}/service-area/${city.slug}/`;
+const nearby = cities.filter((item) => item.slug !== city.slug);
+---
+
+<Base title={city.title} description={city.description} canonical={canonical} faqs={city.faqs}>
+  <JsonLd
+    data={{
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: `Plumbing in ${city.name}`,
+      provider: { "@id": businessId() },
+      areaServed: { "@type": "City", name: city.name },
+      url: canonical,
+    }}
+  />
+  <main id="main" class="page">
+    <div class="wrap">
+      <Breadcrumbs
+        trail={[
+          { label: "Home", href: "/" },
+          { label: "Service area", href: "/service-area/" },
+          { label: city.name },
+        ]}
+      />
+    </div>
+    <div class="wrap grid-2">
+      <article class="prose">
+        <h1>{city.h1}</h1>
+        <p class="lede">{city.lede}</p>
+        <h2>What we see on {city.name} jobs</h2>
+        {city.local.map((p) => <p>{p}</p>)}
+
+        <h2>Services we run here</h2>
+        <div class="link-grid">
+          {navServices.map((item) => (
+            <a class="link-tile" href={item.href}>
+              <strong>{item.label}</strong>
+              <span>in {city.name}</span>
+            </a>
+          ))}
+        </div>
+
+        <h2>Questions</h2>
+        <div class="faq">
+          {city.faqs.map((faq) => (
+            <details>
+              <summary>{faq.q}</summary>
+              <p>{faq.a}</p>
+            </details>
+          ))}
+        </div>
+
+        <h2>Nearby</h2>
+        <p>We work out of Lake Forest, so {city.name} sits inside our normal loop along with:</p>
+        <ul class="pill-links">
+          {nearby.map((item) => (
+            <li><a href={`/service-area/${item.slug}/`}>{item.name}</a></li>
+          ))}
+        </ul>
+      </article>
+
+      <aside class="note note-sticky">
+        <p><strong>Based in Lake Forest</strong></p>
+        <p>
+          {site.address.street}<br />
+          {site.address.city}, {site.address.region} {site.address.postal}
+        </p>
+        <p>Same address and phone on every page and every listing.</p>
+        <p><a class="call" href={`tel:${site.phoneTel}`}>Call {site.phoneDisplay}</a></p>
+        <p><a href="/contact-us/">Request a quote online</a></p>
+        <hr />
+        <p><strong>{city.name} calls we take</strong></p>
+        <p>Drain cleaning, water heaters, leak detection, sewer and main line, and after-hours emergencies.</p>
+      </aside>
+    </div>
+  </main>
+  <CtaBand heading={`Call for a ${city.name} plumber`} />
+</Base>

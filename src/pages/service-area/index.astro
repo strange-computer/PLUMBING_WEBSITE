@@ -1,0 +1,32 @@
+---
+import CtaBand from "../../components/CtaBand.astro";
+import { cities, site } from "../../data/site";
+import Base from "../../layouts/Base.astro";
+---
+
+<Base
+  title="Plumbing Service Area | South Orange County | Lezco Plumbing"
+  description="Lezco Plumbing is based in Lake Forest and serves Mission Viejo, Irvine, Aliso Viejo, Laguna Hills, Laguna Niguel, Rancho Santa Margarita, and Foothill Ranch."
+>
+  <main id="main" class="page">
+    <div class="wrap prose">
+      <h1>Cities we serve</h1>
+      <p class="lede">
+        Home base is Lake Forest. The cities below have their own pages so search results can match the city you actually live in — including “CA”, so Lake Forest, Illinois does not steal the query.
+      </p>
+    </div>
+    <div class="wrap cards" style="margin-top:28px;">
+      <a class="card" href="/">
+        <h2>Lake Forest</h2>
+        <p>Our shop. Drain, leak, water heater, sewer, and emergency plumbing.</p>
+      </a>
+      {cities.map((city) => (
+        <a class="card" href={`/service-area/${city.slug}/`}>
+          <h2>{city.name}</h2>
+          <p>Licensed plumbers from Lake Forest. Call {site.phoneDisplay}.</p>
+        </a>
+      ))}
+    </div>
+  </main>
+  <CtaBand heading="Confirm we cover your street" />
+</Base>

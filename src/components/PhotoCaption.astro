@@ -1,0 +1,17 @@
+---
+import { creditForPhoto, unsplashLinks } from "../data/site";
+
+interface Props {
+  src: string;
+}
+
+const credit = creditForPhoto(Astro.props.src);
+const links = credit ? unsplashLinks(credit) : null;
+---
+
+{credit && links && (
+  <figcaption class="photo-credit">
+    Photo by <a href={links.photographerUrl}>{credit.photographer}</a> on{" "}
+    <a href={links.unsplashUrl}>Unsplash</a>. Stock photo, not a Lezco job.
+  </figcaption>
+)}

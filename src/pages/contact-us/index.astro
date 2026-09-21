@@ -1,0 +1,37 @@
+---
+import QuoteForm from "../../components/QuoteForm.astro";
+import { site } from "../../data/site";
+import Base from "../../layouts/Base.astro";
+---
+
+<Base
+  title="Contact Lezco Plumbing | Lake Forest, CA"
+  description="Request a plumbing quote in Lake Forest. Call (949) 994-9828 or use the form. 25361 Commercentre Dr, Lake Forest, CA 92630."
+>
+  <main id="main" class="page">
+    <div class="wrap grid-2">
+      <article>
+        <h1>Request a quote</h1>
+        <p class="lede">
+          Phone is fastest for same-day and emergencies. Use the form for non-urgent work. We quote before any work starts.
+        </p>
+        <QuoteForm />
+      </article>
+      <aside class="note">
+        <p><strong>Call</strong></p>
+        <p><a href={`tel:${site.phoneTel}`}>{site.phoneDisplay}</a></p>
+        <p><strong>Email</strong></p>
+        <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+        <p><strong>Shop</strong></p>
+        <p>
+          {site.address.street}<br />
+          {site.address.city}, {site.address.region} {site.address.postal}
+        </p>
+        <p><strong>Hours</strong></p>
+        <p>{site.hours}. After-hours: burst pipes, major leaks, sewer backups, no hot water.</p>
+        <p><strong>Have ready</strong></p>
+        <p>Where it is, how long it has been going on, stains, pressure, or sounds.</p>
+      </aside>
+    </div>
+  </main>
+</Base>

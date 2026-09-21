@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lezcoplumbing.com/sitemap-index.xml

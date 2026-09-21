@@ -1,0 +1,65 @@
+---
+import { licenseLine, navCities, navServices, site, uniquePhotoCredits, unsplashLinks } from "../data/site";
+---
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <h2>{site.name}</h2>
+      <p>
+        {site.address.street}<br />
+        {site.address.city}, {site.address.region} {site.address.postal}
+      </p>
+      <p>
+        <a href={`tel:${site.phoneTel}`}>{site.phoneDisplay}</a><br />
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
+      <p>{site.hours}. After-hours emergency calls taken for burst pipes, major leaks, sewer backups, and no hot water.</p>
+      <p>
+        <a href={site.licenseUrl}>{licenseLine()}</a> · C-36 Plumbing<br />
+        Locally owned. Upfront quotes before work starts.
+      </p>
+    </div>
+    <div>
+      <h2>Services</h2>
+      <ul>
+        {navServices.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+        <li><a href="/plumbing-services/">All plumbing services</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>South Orange County</h2>
+      <ul>
+        <li><a href="/">Lake Forest</a></li>
+        {navCities.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </div>
+  </div>
+  <div class="wrap legal">
+    <span>© {new Date().getFullYear()} {site.name}</span>
+    <a href="/privacy-policy/">Privacy</a>
+    <a href="/terms/">Terms</a>
+    <a href="/accessibility/">Accessibility</a>
+  </div>
+  <p class="wrap photo-credits">
+    Homepage faucet photo is from a Lezco job. Other service photos are Unsplash stock, not Lezco job sites.
+    {uniquePhotoCredits.map((credit, index) => {
+      const links = unsplashLinks(credit);
+      return (
+        <span>
+          {index > 0 ? " · " : " "}
+          <a href={links.photoUrl}>{credit.photographer}</a>
+        </span>
+      );
+    })}
+    {" "}on <a href={`https://unsplash.com/?utm_source=lezcoplumbing&utm_medium=referral`}>Unsplash</a>.
+  </p>
+</footer>
+<div class="sticky-call">
+  <a href={`tel:${site.phoneTel}`}>Call now</a>
+  <a href="/contact-us/">Request a quote</a>
+</div>

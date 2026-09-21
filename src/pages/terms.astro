@@ -1,0 +1,19 @@
+---
+import { site } from "../data/site";
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="Terms of Service | Lezco Plumbing"
+  description="Terms for using lezcoplumbing.com and requesting plumbing service from Lezco Plumbing in Lake Forest, CA."
+>
+  <main id="main" class="page">
+    <div class="wrap prose">
+      <h1>Terms of service</h1>
+      <p>
+        Quotes are for the work described. Additional work requires your approval. Website content is general information, not a guarantee that a specific repair will fit every house. California contractor rules apply to the work itself.
+      </p>
+      <p>Questions: {site.email} or {site.phoneDisplay}.</p>
+    </div>
+  </main>
+</Base>

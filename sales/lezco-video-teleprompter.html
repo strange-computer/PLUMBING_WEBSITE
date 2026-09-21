@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lezco Plumbing — teleprompter</title>
+  <style>
+    :root {
+      --bg: #0a0f16;
+      --ink: #f6f2ea;
+      --dim: #7e8b99;
+      --brass: #d99a5b;
+      --line: #1e2a38;
+      --size: 34px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: auto; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Georgia, "Iowan Old Style", Palatino, serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- toolbar ---- */
+    .bar {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 8px 12px;
+      background: rgba(10, 15, 22, 0.94);
+      border-bottom: 1px solid var(--line);
+      font-family: "Segoe UI", system-ui, sans-serif;
+      font-size: 13px;
+    }
+    .bar button {
+      background: #16202c;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 6px 11px;
+      font: inherit;
+      cursor: pointer;
+    }
+    .bar button:hover { border-color: var(--brass); }
+    .bar button.on { background: var(--brass); color: #10161e; border-color: var(--brass); font-weight: 600; }
+    .bar .play { min-width: 92px; font-weight: 600; }
+    .bar .grp {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding-right: 8px;
+      margin-right: 2px;
+      border-right: 1px solid var(--line);
+    }
+    .bar .lbl { color: var(--dim); }
+    .bar .val { color: var(--brass); min-width: 34px; display: inline-block; text-align: center; }
+    .clock {
+      margin-left: auto;
+      font-variant-numeric: tabular-nums;
+      font-size: 15px;
+      color: var(--brass);
+      letter-spacing: 0.04em;
+    }
+    .clock small { color: var(--dim); font-size: 12px; margin-left: 6px; }
+    .progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0;
+      background: var(--brass);
+      z-index: 60;
+      transition: width 0.1s linear;
+    }
+
+    /* ---- reading guide ---- */
+    .guide {
+      position: fixed;
+      left: 0; right: 0;
+      top: 34vh;
+      border-top: 1px solid rgba(217, 154, 91, 0.32);
+      z-index: 40;
+      pointer-events: none;
+    }
+    .guide::before {
+      content: "";
+      position: absolute;
+      left: 10px; top: -6px;
+      border: 6px solid transparent;
+      border-left-color: var(--brass);
+    }
+    body.no-guide .guide { display: none; }
+
+    /* ---- script ---- */
+    main {
+      padding: 30vh 6vw 85vh;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    body.mirror main { transform: scaleX(-1); }
+
+    p.line {
+      font-size: var(--size);
+      line-height: 1.42;
+      margin: 0 0 0.62em;
+      max-width: 24em;
+    }
+    p.line.beat { margin-bottom: 1.5em; }
+    em { color: var(--brass); font-style: normal; }
+    .pause { color: var(--dim); font-style: normal; }
+
+    .cue {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.4;
+      color: var(--brass);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 2.2em 0 1em;
+      padding: 8px 0 8px 12px;
+      border-left: 3px solid var(--brass);
+      max-width: 40em;
+    }
+    .cue b { display: block; color: var(--ink); text-transform: none; letter-spacing: 0; font-size: 15px; font-weight: 400; margin-top: 3px; }
+    .cue:first-of-type { margin-top: 0; }
+
+    .aside {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--dim);
+      background: #101822;
+      border-left: 3px solid var(--line);
+      padding: 12px 16px;
+      margin: 1.6em 0 2em;
+      max-width: 42em;
+    }
+    .aside b { color: var(--ink); }
+
+    .end {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      font-size: 15px;
+      color: var(--dim);
+      border-top: 1px solid var(--line);
+      margin-top: 3em;
+      padding-top: 1.4em;
+      max-width: 42em;
+      line-height: 1.55;
+    }
+    .end h2 { color: var(--brass); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 8px; }
+    .end ul { margin: 0 0 1.2em; padding-left: 1.1em; }
+    .end li { margin-bottom: 5px; }
+
+    @media (max-width: 700px) {
+      .bar { font-size: 12px; }
+      .bar .grp { border: 0; padding-right: 4px; }
+      main { padding: 26vh 5vw 80vh; }
+    }
+    @media print {
+      .bar, .guide, .progress { display: none; }
+      body { background: #fff; color: #111; }
+      main { padding: 0.5in; max-width: none; }
+      p.line { font-size: 15px; max-width: none; margin-bottom: 8px; }
+      .cue { color: #9a5b24; page-break-after: avoid; }
+      em { color: #9a5b24; font-weight: 700; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+
+  <div class="bar">
+    <div class="grp">
+      <button class="play" id="play">▶ Scroll</button>
+      <button id="reset">Top</button>
+    </div>
+    <div class="grp">
+      <span class="lbl">Speed</span>
+      <button id="slower">−</button>
+      <span class="val" id="speedVal">3</span>
+      <button id="faster">+</button>
+    </div>
+    <div class="grp">
+      <span class="lbl">Text</span>
+      <button id="smaller">A−</button>
+      <button id="bigger">A+</button>
+    </div>
+    <div class="grp">
+      <button id="mirror">Mirror</button>
+      <button id="guideBtn" class="on">Guide</button>
+      <button id="full">Fullscreen</button>
+    </div>
+    <div class="clock"><span id="clock">0:00</span><small id="hint">space = start</small></div>
+  </div>
+
+  <div class="guide"></div>
+
+  <main id="script">
+
+    <div class="cue">0:00 · Cold open
+      <b>Screen: Google results for “plumber lake forest”. Scroll slowly. Do not show your face yet.</b>
+    </div>
+    <p class="line">I typed “plumber Lake Forest” into Google this morning.</p>
+    <p class="line">This is what came back.</p>
+    <p class="line">Olson Superior. Top Lake Forest Plumber. John Stevenson. Pristine.</p>
+    <p class="line">Keep scrolling. <span class="pause">(scroll)</span></p>
+    <p class="line beat">Lezco isn't on here. <em>Anywhere.</em></p>
+    <p class="line beat">You're a couple miles from most of these guys. You're just not on the screen.</p>
+
+    <div class="cue">0:35 · Who you are
+      <b>Cut to webcam. Keep it fast — five sentences, then get back to the screen.</b>
+    </div>
+    <p class="line">I'm ___ with OC Web Pros. We're in Lake Forest too.</p>
+    <p class="line">Nobody asked me to make this video. I made it anyway.</p>
+    <p class="line">I went through your site. Then I rebuilt it.</p>
+    <p class="line">Not a mockup — a working site. I'll show you both.</p>
+    <p class="line beat">Give me eight minutes. If it's useless, delete it and I'll leave you alone.</p>
+
+    <div class="cue">1:10 · The gap, in jobs not metrics
+      <b>Screen: stay on the search. Nothing fancy.</b>
+    </div>
+    <p class="line">Here's the part that actually matters.</p>
+    <p class="line">“Plumber Lake Forest” gets about two hundred searches a month.</p>
+    <p class="line">“Emergency plumber Lake Forest,” about a hundred fifty.</p>
+    <p class="line beat">“Plumber Irvine,” four hundred fifty.</p>
+    <p class="line">Those aren't browsers. That's somebody standing in water.</p>
+    <p class="line beat">If you bought those clicks as ads, you'd pay twenty-five to thirty-five dollars each.</p>
+    <p class="line">So what's one water heater job worth to you? <span class="pause">(beat)</span> One repipe?</p>
+    <p class="line beat">That's the gap. It isn't traffic. It's jobs.</p>
+    <p class="line">And two things are in the way.</p>
+    <p class="line">You're not in the map. And your website isn't ranking for anything.</p>
+
+    <div class="cue">2:15 · Walk their live site
+      <b>Screen: lezcoplumbing.com. Click like a homeowner, not like an SEO.</b>
+    </div>
+    <p class="line beat">Let me go through your site the way a homeowner would.</p>
+    <p class="line">Five second test. Who are you, where are you, what's the number.</p>
+    <p class="line">Number's right here. That part's fine.</p>
+    <p class="line beat">But your license isn't on this page. Not anywhere.</p>
+    <p class="line">You're CSLB eleven-twenty-nine-seventy. C-36.</p>
+    <p class="line beat">Anybody who's been burned by a contractor looks for that <em>first</em>.</p>
+    <p class="line">Second thing. Your pages.</p>
+    <p class="line">There's a homepage. There's one services page. That's about it.</p>
+    <p class="line">No water heater page. No drain page.</p>
+    <p class="line beat">No Mission Viejo page. No Irvine page.</p>
+    <p class="line">So when somebody searches “water heater repair Lake Forest,”</p>
+    <p class="line beat">Google's got nothing of yours to show them.</p>
+    <p class="line">Third. Every page opens with the same empty headline block.</p>
+    <p class="line beat">Before your real headline. It reads like a template, not like your shop.</p>
+    <p class="line">Fourth one's quiet, but it's ugly.</p>
+    <p class="line">Your site tells Google where to find its own map file.</p>
+    <p class="line">That file is broken. It's been handing back an error.</p>
+    <p class="line beat">And this site isn't connected to Search Console, so nobody can even see it happening.</p>
+
+    <div class="aside">
+      <b>Don't say:</b> domain rating, keyword difficulty, heading spam, NAP, HTTP 500, crawl budget.
+      <b>Don't</b> read the spam link domains out loud. One sentence about it later is plenty.
+    </div>
+
+    <div class="cue">4:15 · The rebuild
+      <b>Screen: localhost:4321. Home → a service page → a city page → footer license.</b>
+    </div>
+    <p class="line beat">Alright. Here's what I built.</p>
+    <p class="line">Same phone. Same address. Same shop.</p>
+    <p class="line beat">License is in the footer, on the about page, linked to the state lookup so anyone can check it.</p>
+    <p class="line">Now the pages.</p>
+    <p class="line">Drain cleaning. Leak detection. Water heaters. Sewer and main line. Emergency.</p>
+    <p class="line">Every one of them is its own page, with real detail on the work.</p>
+    <p class="line beat">That's how you show up when somebody searches that exact job.</p>
+    <p class="line">Then the cities around you. Mission Viejo, Irvine, Aliso Viejo, Laguna Hills, Laguna Niguel, Rancho Santa Margarita.</p>
+    <p class="line">Lake Forest stays home base.</p>
+    <p class="line">And I wrote them for what's actually out here. Slab foundations. Hard water. Tankless upgrades.</p>
+    <p class="line beat">Not “we proudly serve all of Orange County.”</p>
+    <p class="line">There's a quote form. It goes to your info@ address.</p>
+    <p class="line beat">And emergencies get told to call you, not fill out a form at midnight.</p>
+    <p class="line">One thing I want to be straight with you about.</p>
+    <p class="line">This faucet photo is yours. I pulled it off your current site.</p>
+    <p class="line">The rest are stock, and I labeled them as stock.</p>
+    <p class="line beat">Send me twenty photos off your phone and this stops looking like a template and starts looking like your trucks.</p>
+
+    <div class="cue">6:15 · The honest half
+      <b>Back to webcam. This is the credibility moment — slow down here.</b>
+    </div>
+    <p class="line beat">Now here's the part a lot of people won't tell you.</p>
+    <p class="line">This website, by itself, will <em>not</em> put you in that map.</p>
+    <p class="line">The map is your Google Business Profile. That's a separate thing.</p>
+    <p class="line beat">Categories, photos, hours, reviews, replies to reviews.</p>
+    <p class="line">Same story with your listings. Yelp has you in Irvine. Nextdoor has Anaheim.</p>
+    <p class="line">There's an old seven-one-four number still floating around out there.</p>
+    <p class="line beat">Google reads all that and sees three different plumbers.</p>
+    <p class="line">And your backlinks are a mess. Hundreds of junk directory links pointed at you.</p>
+    <p class="line beat">I don't care how they got there. They need to be cleaned up.</p>
+    <p class="line">None of that lives in your website. That's the other half of the job.</p>
+
+    <div class="cue">7:00 · Close
+      <b>Webcam. Say it plain, then stop talking.</b>
+    </div>
+    <p class="line beat">So. Two pieces, one decision.</p>
+    <p class="line">One is the website. This one, on your domain, with your photos.</p>
+    <p class="line">Two is the Google side. Profile, listings, reviews, cleanup.</p>
+    <p class="line beat">That one's monthly, because the map is a race and the guys in it don't stop.</p>
+    <p class="line">If you want to talk, just reply to this video.</p>
+    <p class="line beat">If you want to sit on it, I'll send a one-page version of everything I just said.</p>
+    <p class="line">Either way — that broken sitemap is a real bug.</p>
+    <p class="line beat">Get it fixed this week, even if it's not with us.</p>
+    <p class="line">Thanks for watching. ___ , OC Web Pros, nine four nine, three two nine, four four three seven.</p>
+
+    <div class="end">
+      <h2>If you only keep three lines</h2>
+      <ul>
+        <li>“You're a couple miles from these guys. You're just not on the screen.”</li>
+        <li>“This website by itself will not put you in that map. That's the other half of the job.”</li>
+        <li>“That broken sitemap is a real bug. Get it fixed this week, even if it's not with us.”</li>
+      </ul>
+      <h2>Before you hit record</h2>
+      <ul>
+        <li>Fill in your name in two places above (0:35 and the sign-off).</li>
+        <li>Close inbox, Slack, and notifications. Hide bookmarks bar.</li>
+        <li>Have four tabs ready: Google search · lezcoplumbing.com · localhost:4321 · their Google Business listing.</li>
+        <li>Say their name in the first ten seconds if you're sending it to Jacob directly.</li>
+      </ul>
+      <h2>After you stop</h2>
+      <ul>
+        <li>Send the one-page PDF. Do not attach this teleprompter.</li>
+        <li>Subject line that works: “Your site vs. the guys ranking above you (7 min video)”.</li>
+        <li>If no reply in 5 days, send the sitemap fix for free. That's the follow-up.</li>
+      </ul>
+    </div>
+  </main>
+
+  <script>
+    const speeds = [0.2, 0.35, 0.5, 0.7, 0.95, 1.3, 1.7, 2.2];
+    let speedIdx = 2;
+    let running = false;
+    let carry = 0;
+    let started = null;
+    let elapsed = 0;
+    let fontPx = 34;
+
+    const $ = (id) => document.getElementById(id);
+    const playBtn = $("play");
+    const speedVal = $("speedVal");
+    const clock = $("clock");
+    const hint = $("hint");
+    const bar = $("progress");
+
+    function fmt(ms) {
+      const s = Math.floor(ms / 1000);
+      return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+    }
+
+    function setRunning(next) {
+      running = next;
+      playBtn.textContent = running ? "❚❚ Pause" : "▶ Scroll";
+      playBtn.classList.toggle("on", running);
+      if (running && started === null) started = performance.now();
+      if (!running && started !== null) {
+        elapsed += performance.now() - started;
+        started = null;
+      }
+      hint.textContent = running ? "space = pause" : "space = start";
+    }
+
+    function tick() {
+      if (running) {
+        carry += speeds[speedIdx];
+        const whole = Math.floor(carry);
+        if (whole >= 1) {
+          window.scrollBy(0, whole);
+          carry -= whole;
+        }
+        const max = document.body.scrollHeight - window.innerHeight;
+        if (max > 0 && window.scrollY >= max - 1) setRunning(false);
+      }
+      const total = elapsed + (started !== null ? performance.now() - started : 0);
+      clock.textContent = fmt(total);
+      const max = document.body.scrollHeight - window.innerHeight;
+      bar.style.width = (max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0) + "%";
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    function setSpeed(i) {
+      speedIdx = Math.max(0, Math.min(speeds.length - 1, i));
+      speedVal.textContent = String(speedIdx + 1);
+    }
+    function setFont(px) {
+      fontPx = Math.max(18, Math.min(72, px));
+      document.documentElement.style.setProperty("--size", fontPx + "px");
+    }
+
+    playBtn.onclick = () => setRunning(!running);
+    $("reset").onclick = () => {
+      setRunning(false);
+      window.scrollTo(0, 0);
+      elapsed = 0;
+      started = null;
+    };
+    $("slower").onclick = () => setSpeed(speedIdx - 1);
+    $("faster").onclick = () => setSpeed(speedIdx + 1);
+    $("smaller").onclick = () => setFont(fontPx - 3);
+    $("bigger").onclick = () => setFont(fontPx + 3);
+    $("mirror").onclick = (e) => {
+      document.body.classList.toggle("mirror");
+      e.currentTarget.classList.toggle("on", document.body.classList.contains("mirror"));
+    };
+    $("guideBtn").onclick = (e) => {
+      document.body.classList.toggle("no-guide");
+      e.currentTarget.classList.toggle("on", !document.body.classList.contains("no-guide"));
+    };
+    $("full").onclick = () => {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen?.();
+    };
+
+    document.addEventListener("keydown", (e) => {
+      if (e.target instanceof HTMLButtonElement && e.key === " ") e.target.blur();
+      switch (e.key) {
+        case " ": e.preventDefault(); setRunning(!running); break;
+        case "ArrowUp": e.preventDefault(); setSpeed(speedIdx + 1); break;
+        case "ArrowDown": e.preventDefault(); setSpeed(speedIdx - 1); break;
+        case "+": case "=": setFont(fontPx + 3); break;
+        case "-": setFont(fontPx - 3); break;
+        case "m": case "M": $("mirror").click(); break;
+        case "r": case "R": $("reset").click(); break;
+        case "f": case "F": $("full").click(); break;
+      }
+    });
+  </script>
+</body>
+</html>

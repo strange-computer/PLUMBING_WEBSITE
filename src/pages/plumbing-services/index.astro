@@ -1,0 +1,43 @@
+---
+import CtaBand from "../../components/CtaBand.astro";
+import { services, site } from "../../data/site";
+import Base from "../../layouts/Base.astro";
+---
+
+<Base
+  title="Plumbing Services in Lake Forest, CA | Lezco Plumbing"
+  description="Residential and commercial plumbing in Lake Forest: drains, leaks, water heaters, sewer lines, fixtures, repiping, and emergency service. Upfront quotes."
+>
+  <main id="main" class="page">
+    <div class="wrap prose">
+      <h1>Plumbing services in Lake Forest</h1>
+      <p class="lede">
+        Residential and commercial plumbing from a Lake Forest shop. Pick the job you need — each core service has its own page with the details that belong there.
+      </p>
+    </div>
+    <div class="wrap cards" style="margin-top:28px;">
+      {services.map((service) => (
+        <a class="card" href={`/plumbing-services/${service.slug}/`}>
+          <img src={service.photo} alt="" width="640" height="360" />
+          <div class="card-body">
+            <h2>{service.h1}</h2>
+            <p>{service.lede}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+    <div class="wrap prose" style="margin-top:48px;">
+      <h2>Also on most calls</h2>
+      <p>
+        Toilet, faucet, and fixture repair or replacement. Garbage disposals. Shutoff valves and pressure-reducing valves.
+        Gas line work to an appliance, including earthquake shutoff valves at the meter. Backflow preventers. Water filtration
+        and softeners. Whole-home or partial repiping in copper or PEX when galvanized or pinholing copper is done.
+      </p>
+      <p>
+        Commercial work covers restaurants, offices, retail, and multi-unit properties. We schedule around your hours when we can.
+        Call {site.phoneDisplay} and we will tell you if we can take the job today.
+      </p>
+    </div>
+  </main>
+  <CtaBand heading="Get an upfront plumbing quote" />
+</Base>

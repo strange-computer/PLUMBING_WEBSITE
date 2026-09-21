@@ -1,0 +1,24 @@
+---
+import { site } from "../data/site";
+
+type Props = {
+  heading: string;
+  text?: string;
+};
+
+const { heading, text = "Call for a quote. We give you the price before any work begins." } = Astro.props;
+---
+
+<section class="band-dark">
+  <div class="wrap cta-row">
+    <div>
+      <h2>{heading}</h2>
+      <p>{text}</p>
+    </div>
+    <div class="cta-stack">
+      <a class="cta-phone" href={`tel:${site.phoneTel}`}>{site.phoneDisplay}</a>
+      <p class="cta-sub">{site.hours} · after-hours emergencies</p>
+      <a class="call call-ghost" href="/contact-us/">Request a quote</a>
+    </div>
+  </div>
+</section>

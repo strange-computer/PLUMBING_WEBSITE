@@ -1,0 +1,19 @@
+---
+import { site } from "../../data/site";
+import Base from "../../layouts/Base.astro";
+---
+
+<Base
+  title="Quote request sent | Lezco Plumbing"
+  description="We received your quote request. For emergencies call (949) 994-9828."
+>
+  <main id="main" class="page">
+    <div class="wrap prose">
+      <h1>Request sent</h1>
+      <p class="lede">
+        If the form went through, it is in the {site.email} inbox. We will follow up. If this is urgent, do not wait — call <a href={`tel:${site.phoneTel}`}>{site.phoneDisplay}</a>.
+      </p>
+      <p><a href="/">Back to the homepage</a></p>
+    </div>
+  </main>
+</Base>

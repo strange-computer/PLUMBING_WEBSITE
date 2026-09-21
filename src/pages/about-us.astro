@@ -1,0 +1,69 @@
+---
+import CtaBand from "../components/CtaBand.astro";
+import PhotoCaption from "../components/PhotoCaption.astro";
+import { licenseLine, site } from "../data/site";
+import Base from "../layouts/Base.astro";
+
+const faqs = [
+  {
+    q: "How long have you been in Lake Forest?",
+    a: "We started in 2024. Two years of jobs with homeowners, landlords, property managers, and small businesses in Lake Forest and south Orange County.",
+  },
+  {
+    q: "Who owns the company?",
+    a: "It is locally owned. The people who answer the phone and the plumbers on the truck are the same small team. The name on the truck is ours.",
+  },
+];
+---
+
+<Base
+  title="About Lezco Plumbing | Lake Forest, CA"
+  description="Lezco Plumbing is a locally owned Lake Forest plumbing company founded in 2024. Licensed plumbers, upfront pricing, residential and commercial work in south Orange County."
+  faqs={faqs}
+>
+  <main id="main" class="page">
+    <div class="wrap grid-2">
+      <article class="prose">
+        <h1>About Lezco Plumbing</h1>
+        <p class="lede">
+          We started this shop in 2024 because Lake Forest did not need another distant company with a local phone number. It needed a crew that answers, quotes honestly, and shows up.
+        </p>
+        <h2>How we work</h2>
+        <p>
+          Diagnose first. Quote second. Work third. If we see something extra, we point it out and let you decide. We do not manufacture scope. Work is performed by licensed California plumbers to code, including seismic strapping and current fixture rules.
+        </p>
+        <p>
+          California C-36 plumbing license <a href={site.licenseUrl}>{licenseLine()}</a>. Confirm status on the CSLB site before you hire any contractor, including us.
+        </p>
+        <h2>Housing we actually see</h2>
+        <p>
+          Slab foundations, hard water, aging galvanized in older tracts, and tankless upgrades on remodels. That is the Lake Forest and south-county mix. It is why leak detection, water heaters, and drain work are separate pages instead of one long homepage.
+        </p>
+        <h2>Questions</h2>
+        <div class="faq">
+          {faqs.map((faq) => (
+            <details>
+              <summary>{faq.q}</summary>
+              <p>{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </article>
+      <aside class="note">
+        <figure class="photo" style="margin-bottom:12px;">
+          <img src={site.photos.plumber} alt="Plumber working on PVC drain pipes under a kitchen sink" width="640" height="360" style="width:100%;height:auto;" />
+          <PhotoCaption src={site.photos.plumber} />
+        </figure>
+        <p><strong>Shop</strong></p>
+        <p>
+          {site.address.street}<br />
+          {site.address.city}, {site.address.region} {site.address.postal}
+        </p>
+        <p><a href={site.licenseUrl}>{licenseLine()}</a> · C-36</p>
+        <p>{site.hours}</p>
+        <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+      </aside>
+    </div>
+  </main>
+  <CtaBand heading="Talk to the Lake Forest shop" />
+</Base>
