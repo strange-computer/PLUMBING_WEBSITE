@@ -1,9 +1,9 @@
 export const site = {
-  name: "Lezco Plumbing",
-  url: "https://lezcoplumbing.com",
+  name: "Oceanview Plumbing",
+  url: "https://oceanviewplumbing.com",
   phoneDisplay: "(949) 994-9828",
   phoneTel: "+19499949828",
-  email: "info@lezcoplumbing.com",
+  email: "info@oceanviewplumbing.com",
   foundingDate: "2024-02-04",
   priceRange: "$$",
   hours: "7:30 AM – 8:30 PM, every day",
@@ -30,10 +30,7 @@ export const site = {
     plumber: "/images/plumber-at-work.jpg",
     van: "/images/OCEANVIEW_VAN_PNG.png",
   },
-  sameAs: [
-    "https://www.instagram.com/lezcoplumbing/",
-    "https://www.buildzoom.com/contractor/lezco-plumbing",
-  ],
+  sameAs: [],
 };
 
 export const navServices = [
@@ -155,7 +152,7 @@ export type ServicePage = {
 export const services: ServicePage[] = [
   {
     slug: "drain-cleaning",
-    title: "Drain Cleaning in Lake Forest, CA | Lezco Plumbing",
+    title: "Drain Cleaning in Lake Forest, CA | Oceanview Plumbing",
     description:
       "Drain cleaning and clog removal in Lake Forest and south Orange County. Kitchen, bathroom, and main line clogs, plus hydro jetting when a snake is not enough.",
     h1: "Drain cleaning in Lake Forest",
@@ -192,7 +189,7 @@ export const services: ServicePage[] = [
   },
   {
     slug: "leak-detection",
-    title: "Leak Detection and Pipe Repair in Lake Forest, CA | Lezco Plumbing",
+    title: "Leak Detection and Pipe Repair in Lake Forest, CA | Oceanview Plumbing",
     description:
       "Hidden leak detection and pipe repair in Lake Forest, including slab leaks. We locate the leak before opening walls or floors, then repair it with an upfront quote.",
     h1: "Leak detection and pipe repair",
@@ -229,7 +226,7 @@ export const services: ServicePage[] = [
   },
   {
     slug: "water-heater",
-    title: "Water Heater Repair and Replacement in Lake Forest, CA | Lezco Plumbing",
+    title: "Water Heater Repair and Replacement in Lake Forest, CA | Oceanview Plumbing",
     description:
       "Tank and tankless water heater repair and replacement in Lake Forest. Same-day no-hot-water calls when availability allows, with an upfront quote before we start.",
     h1: "Water heater repair and replacement",
@@ -266,7 +263,7 @@ export const services: ServicePage[] = [
   },
   {
     slug: "sewer-and-main-line",
-    title: "Sewer and Main Line Service in Lake Forest, CA | Lezco Plumbing",
+    title: "Sewer and Main Line Service in Lake Forest, CA | Oceanview Plumbing",
     description:
       "Sewer line cleaning, camera inspection, repair, and replacement in Lake Forest. Trenchless options where the line allows, plus main water line repair.",
     h1: "Sewer and main line service",
@@ -302,7 +299,7 @@ export const services: ServicePage[] = [
   },
   {
     slug: "emergency",
-    title: "Emergency Plumber in Lake Forest, CA | Lezco Plumbing",
+    title: "Emergency Plumber in Lake Forest, CA | Oceanview Plumbing",
     description:
       "Emergency plumber in Lake Forest for burst pipes, major leaks, sewer backups, and no hot water. Same-day and after-hours response with licensed plumbers.",
     h1: "Emergency plumber in Lake Forest",
@@ -353,7 +350,7 @@ export const cities: CityPage[] = [
   {
     slug: "mission-viejo",
     name: "Mission Viejo",
-    title: "Plumber in Mission Viejo, CA | Lezco Plumbing",
+    title: "Plumber in Mission Viejo, CA | Oceanview Plumbing",
     description:
       "Licensed plumber serving Mission Viejo, CA from Lake Forest. Drain cleaning, water heaters, leak detection, and emergency plumbing with upfront pricing.",
     h1: "Plumber in Mission Viejo, CA",
@@ -376,7 +373,7 @@ export const cities: CityPage[] = [
   {
     slug: "irvine",
     name: "Irvine",
-    title: "Plumber in Irvine, CA | Lezco Plumbing",
+    title: "Plumber in Irvine, CA | Oceanview Plumbing",
     description:
       "Plumber serving Irvine, CA. Water heater, drain cleaning, leak detection, and commercial plumbing for homes, rentals, and businesses. Call (949) 994-9828.",
     h1: "Plumber in Irvine, CA",
@@ -399,7 +396,7 @@ export const cities: CityPage[] = [
   {
     slug: "aliso-viejo",
     name: "Aliso Viejo",
-    title: "Plumber in Aliso Viejo, CA | Lezco Plumbing",
+    title: "Plumber in Aliso Viejo, CA | Oceanview Plumbing",
     description:
       "Aliso Viejo plumber for drain cleaning, water heaters, leaks, and emergencies. Licensed plumbers from Lake Forest. Upfront pricing, same-day when available.",
     h1: "Plumber in Aliso Viejo, CA",
@@ -422,7 +419,7 @@ export const cities: CityPage[] = [
   {
     slug: "laguna-hills",
     name: "Laguna Hills",
-    title: "Plumber in Laguna Hills, CA | Lezco Plumbing",
+    title: "Plumber in Laguna Hills, CA | Oceanview Plumbing",
     description:
       "Laguna Hills plumber for aging pipe, water heaters, drains, and sewer work. Licensed Lake Forest plumbers, same-day service when available.",
     h1: "Plumber in Laguna Hills, CA",
@@ -445,7 +442,7 @@ export const cities: CityPage[] = [
   {
     slug: "laguna-niguel",
     name: "Laguna Niguel",
-    title: "Plumber in Laguna Niguel, CA | Lezco Plumbing",
+    title: "Plumber in Laguna Niguel, CA | Oceanview Plumbing",
     description:
       "Plumber in Laguna Niguel, CA for leaks, drains, water heaters, and sewer service. Lake Forest based, licensed, upfront quotes. Call (949) 994-9828.",
     h1: "Plumber in Laguna Niguel, CA",
@@ -468,7 +465,7 @@ export const cities: CityPage[] = [
   {
     slug: "rancho-santa-margarita",
     name: "Rancho Santa Margarita",
-    title: "Plumber in Rancho Santa Margarita, CA | Lezco Plumbing",
+    title: "Plumber in Rancho Santa Margarita, CA | Oceanview Plumbing",
     description:
       "Rancho Santa Margarita plumber for slab leaks, water heaters, drain cleaning, and emergencies. Licensed plumbers based in Lake Forest.",
     h1: "Plumber in Rancho Santa Margarita, CA",
@@ -523,7 +520,7 @@ export const quoteCities = [
   "Other",
 ];
 
-const unsplashUtm = "utm_source=lezcoplumbing&utm_medium=referral";
+const unsplashUtm = "utm_source=oceanviewplumbing&utm_medium=referral";
 
 export type PhotoCredit = {
   src: string;

@@ -1,5 +1,5 @@
 /* ============================================================
-   LEZCO PLUMBING — industrial dark design system
+   OCEANVIEW PLUMBING — industrial dark design system
    Ink shell · safety-orange accent · Anton display · Space Grotesk body
    ============================================================ */
 
@@ -363,7 +363,7 @@ a:hover {
 }
 
 .hero::after {
-  content: "LEZCO";
+  content: "OCEANVIEW";
   position: absolute;
   right: -0.06em;
   bottom: -0.28em;

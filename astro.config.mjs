@@ -2,7 +2,7 @@ import sitemap from "@astrojs/sitemap";
 import { defineConfig } from "astro/config";
 
 export default defineConfig({
-  site: "https://lezcoplumbing.com",
+  site: "https://oceanviewplumbing.com",
   trailingSlash: "always",
   integrations: [sitemap()],
 });

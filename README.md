@@ -1,4 +1,4 @@
-# Lezco Plumbing site (remake)
+# Oceanview Plumbing site (remake)
 
 Static Astro site for the Lake Forest shop. Built to fix on-page architecture from the SEO audit: one H1 per page, dedicated service and city URLs, consistent NAP, working sitemap, no heading spam.
 

@@ -5,7 +5,7 @@ const thanks = new URL("/contact-us/thanks/", Astro.url).href;
 ---
 
 <form class="quote-form" action={`https://formsubmit.co/${site.email}`} method="POST">
-  <input type="hidden" name="_subject" value="Quote request from lezcoplumbing.com" />
+  <input type="hidden" name="_subject" value={`Quote request from ${new URL(site.url).hostname}`} />
   <input type="hidden" name="_template" value="table" />
   <input type="hidden" name="_captcha" value="false" />
   <input type="hidden" name="_next" value={thanks} />
